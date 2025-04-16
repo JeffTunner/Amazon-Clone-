@@ -1,4 +1,4 @@
-import {cart, removeFromCart, calculateCartQuantity} from "../data/cart.js";
+import {cart, removeFromCart, calculateCartQuantity, updateQuantity} from "../data/cart.js";
 import {products} from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
 
@@ -36,9 +36,11 @@ cart.forEach((cartItem) => {
                   <span>
                     Quantity: <span class="quantity-label">${cartItem.quantity}</span>
                   </span>
-                  <span class="update-quantity-link link-primary">
+                  <span class="update-quantity-link link-primary js-update-link" data-product-id="${matchingProduct.id}">
                     Update
                   </span>
+                  <input class="quantity-input js-number-input" type="number">
+                  <span class="save-quantity-link link-primary js-save-link" data-product-id="${matchingProduct.id}">Save</span>
                   <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${matchingProduct.id}">
                     Delete
                   </span>
@@ -113,3 +115,31 @@ function updateCartQuantity() {
 document.querySelector('.js-checkout').innerHTML=`${calculateCartQuantity()} Items`;
 }
 updateCartQuantity();
+
+document.querySelectorAll('.js-update-link').forEach((link) => {
+  link.addEventListener('click', () => {
+    const productId = link.dataset.productId;
+    link.style.display="none";
+    const container = document.querySelector(`.js-cart-item-container-${productId}`);
+    container.querySelector('.js-number-input').classList.add('in-process');
+    container.querySelector('.js-save-link').classList.add('in-process');
+  });
+});
+
+document.querySelectorAll('.js-save-link').forEach((link) => {
+  link.addEventListener('click', () => {
+    const productId = link.dataset.productId;
+    const container = document.querySelector(`.js-cart-item-container-${productId}`);
+    const newQuantity = Number(container.querySelector('.js-number-input').value);
+    if(newQuantity>=0) {
+      container.querySelector('.js-number-input').classList.remove('in-process');
+      container.querySelector('.js-save-link').classList.remove('in-process');
+      container.querySelector('.js-update-link').style.display="inline";
+      updateQuantity(productId, newQuantity);
+      container.querySelector('.quantity-label').innerHTML=`${newQuantity}`;
+      updateCartQuantity();
+    } else {
+      alert('Not a valid Quantity');
+    }
+  });
+});
