@@ -6,11 +6,6 @@ import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.j
 import dayjs from 'https://cdn.jsdelivr.net/npm/dayjs@1.11.10/+esm';
 import { renderPaymentSummary } from "./paymentSummary.js";
 
-const today = dayjs();
-const deliverydate = today.add(7, 'days');
-const format = deliverydate.format('dddd, MMMM D');
-console.log(format);
-
 export function renderOrderSummary() {
 
 
@@ -116,6 +111,7 @@ document.querySelectorAll('.js-delete-link').forEach((link) => {
         container.remove();
 
         updateCartQuantity();
+        renderPaymentSummary();
     });
 });
 
@@ -147,6 +143,7 @@ document.querySelectorAll('.js-save-link').forEach((link) => {
       updateQuantity(productId, newQuantity);
       container.querySelector('.quantity-label').innerHTML=`${newQuantity}`;
       updateCartQuantity();
+      renderPaymentSummary();
     } else {
       alert('Not a valid Quantity');
     }
