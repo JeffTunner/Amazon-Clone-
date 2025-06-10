@@ -5,6 +5,7 @@ import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.j
 
 import dayjs from 'https://cdn.jsdelivr.net/npm/dayjs@1.11.10/+esm';
 import { renderPaymentSummary } from "./paymentSummary.js";
+import { renderCheckoutHeader } from "./checkoutHeader.js";
 
 export function renderOrderSummary() {
 
@@ -112,6 +113,7 @@ document.querySelectorAll('.js-delete-link').forEach((link) => {
 
         updateCartQuantity();
         renderPaymentSummary();
+        renderCheckoutHeader();
     });
 });
 
@@ -144,6 +146,7 @@ document.querySelectorAll('.js-save-link').forEach((link) => {
       container.querySelector('.quantity-label').innerHTML=`${newQuantity}`;
       updateCartQuantity();
       renderPaymentSummary();
+      renderCheckoutHeader(); 
     } else {
       alert('Not a valid Quantity');
     }
@@ -156,6 +159,7 @@ document.querySelectorAll('.js-delivery-option').forEach((element) => {
         updateDeliveryOption(productId, deliveryOptionId);
         renderOrderSummary();
         renderPaymentSummary();
+        renderCheckoutHeader();
   });
 });
 
