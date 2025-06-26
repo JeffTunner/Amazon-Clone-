@@ -6,7 +6,13 @@ import { loadProducts, loadProductsFetch } from "../data/products.js";
 //import '../data/backend-practice.js';
 
 async function loadPage() {
-    await loadProductsFetch();
+    try {
+      //  throw 'error';
+        await loadProductsFetch();
+    } catch (error) {
+        console.error('Error loading products:', error);
+        return;
+    }
     renderCheckoutHeader();
     renderOrderSummary();
     renderPaymentSummary();
