@@ -19,17 +19,10 @@ async function loadPage() {
     return;
   }
 
+  const today = dayjs();
   const orderTime = dayjs(order.orderTime);
   const deliveryTime = dayjs(productDetails.estimatedDeliveryTime);
-  const today = dayjs();
-
-  const totalDuration = deliveryTime.diff(orderTime);
-  const elapsedDuration = today.diff(orderTime);
-  let percentProgress = (elapsedDuration / totalDuration) * 100;
-
-  // Clamp between 0 and 100, round to 2 decimal places
-  percentProgress = Math.min(Math.max(percentProgress, 0), 100);
-  percentProgress = Math.round(percentProgress * 100) / 100;
+  const percentProgress = ((today - orderTime) / (deliveryTime - orderTime)) * 100;
 
   // Determine which step is active
   let statusStep = '';
@@ -41,13 +34,15 @@ async function loadPage() {
     statusStep = 'delivered';
   }
 
+   const deliveredMessage = today < deliveryTime ? 'Arriving on' : 'Delivered on';
+
   const trackingHTML = `
     <a class="back-to-orders-link link-primary" href="orders.html">
       View all orders
     </a>
 
     <div class="delivery-date">
-      Arriving on ${deliveryTime.format('dddd, MMMM D')}
+      ${deliveredMessage}  ${deliveryTime.format('dddd, MMMM D')}
     </div>
 
     <div class="product-info">
