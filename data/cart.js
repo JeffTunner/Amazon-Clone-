@@ -22,17 +22,24 @@ function saveToStorage() {
     localStorage.setItem('cart', JSON.stringify(cart));
 }
 
-export function addToCart(productId) {
+export function addToCart(productId, quantity = 1) {
     const selector = document.querySelector(`.js-quantity-selector-${productId}`);
-    let selectorValue = selector.value; 
-    selectorValue  = Number(selectorValue);
+    let selectorValue;
+
+    if (selector) {
+        selectorValue = Number(selector.value);
+    } else {
+        selectorValue = quantity; // fallback if selector not found
+    }
+
     let matchingItem;
     cart.forEach((item) => {
-        if(productId === item.productId) {
+        if (productId === item.productId) {
             matchingItem = item;
         }
     });
-    if(matchingItem) {
+
+    if (matchingItem) {
         matchingItem.quantity += selectorValue;
     } else {
         cart.push({
@@ -41,8 +48,10 @@ export function addToCart(productId) {
             deliveryOptionId: '1'
         });
     }
+
     saveToStorage();
 }
+
 
 export function addToCartTestOnly(productId, quantity = null) {
   let selectorValue = quantity;
@@ -131,3 +140,12 @@ export function updateDeliveryOption(productId, deliveryOptionId) {
     matchingItem.deliveryOptionId = deliveryOptionId;
     saveToStorage();
 }
+
+export async function loadCartFetch() {
+    const response = await fetch('https://supersimplebackend.dev/cart');
+    const text = await response.text();
+    console.log(text);
+    return text;
+
+}
+
